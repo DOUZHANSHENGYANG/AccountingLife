@@ -16,7 +16,7 @@ function Main() {
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="dark">
+    <ThemeProvider>
       <Main />
     </ThemeProvider>
   );

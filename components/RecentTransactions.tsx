@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import Card from './ui/Card';
 import { COLORS } from '../constants';
@@ -13,7 +13,8 @@ interface RecentTransactionsProps {
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ month, year }) => {
   const { isDarkMode } = useTheme();
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // 筛选选定月份的交易
   const transactions = mockTransactions
@@ -23,12 +24,13 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ month, year }) 
     })
     .slice(0, 5); // 只显示最近5条
 
-  const handleExpand = (id: string) => {
-    if (expandedId === id) {
-      setExpandedId(null);
-    } else {
-      setExpandedId(id);
-    }
+  const handleTransactionPress = (transaction: any) => {
+    setSelectedTransaction(transaction);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -50,115 +52,45 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ month, year }) 
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.transactionList}>
+      <View style={styles.transactionList}>
         {transactions.length > 0 ? (
           transactions.map((transaction) => (
             <TouchableOpacity
               key={transaction.id}
-              style={[
-                styles.transactionItem,
-                {
-                  backgroundColor: isDarkMode 
-                    ? 'rgba(15, 23, 42, 0.8)' 
-                    : 'rgba(248, 250, 252, 0.8)',
-                  borderColor: isDarkMode ? '#334155' : '#E2E8F0',
-                }
-              ]}
-              onPress={() => handleExpand(transaction.id)}
+              style={styles.transactionItem}
+              onPress={() => handleTransactionPress(transaction)}
               activeOpacity={0.7}
             >
-              <View style={styles.transactionHeader}>
-                <View style={styles.transactionLeft}>
-                  <View style={[
-                    styles.categoryIcon,
-                    { backgroundColor: `${transaction.categoryColor}20` }
-                  ]}>
-                    <Text style={styles.categoryIconText}>{transaction.categoryIcon}</Text>
-                  </View>
-                  <View style={styles.transactionInfo}>
-                    <Text style={[
-                      styles.transactionTitle,
-                      { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
-                    ]}>
-                      {transaction.title}
-                    </Text>
-                    <Text style={[
-                      styles.transactionDate,
-                      { color: isDarkMode ? '#94A3B8' : '#64748B' }
-                    ]}>
-                      {formatDate(transaction.date)}
-                    </Text>
-                  </View>
+              <View style={styles.transactionLeft}>
+                <View style={[
+                  styles.categoryIcon,
+                  { backgroundColor: transaction.categoryColor }
+                ]}>
+                  <Text style={styles.categoryIconText}>{transaction.categoryIcon}</Text>
                 </View>
-                <View style={styles.transactionRight}>
+                <View style={styles.transactionInfo}>
                   <Text style={[
-                    styles.transactionAmount,
-                    { color: transaction.amount < 0 ? '#FF6B6B' : '#4CAF50' }
+                    styles.transactionTitle,
+                    { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
                   ]}>
-                    {formatCurrency(transaction.amount)}
+                    {transaction.title}
                   </Text>
                   <Text style={[
-                    styles.expandIcon,
-                    { transform: [{ rotate: expandedId === transaction.id ? '90deg' : '0deg' }] }
+                    styles.transactionDate,
+                    { color: isDarkMode ? '#94A3B8' : '#64748B' }
                   ]}>
-                    {'>'}
+                    {formatDate(transaction.date)}
                   </Text>
                 </View>
               </View>
-
-              {expandedId === transaction.id && (
-                <View style={styles.expandedContent}>
-                  <View style={[
-                    styles.expandedDivider,
-                    { backgroundColor: isDarkMode ? '#334155' : '#E2E8F0' }
-                  ]} />
-                  <View style={styles.expandedDetails}>
-                    <Text style={[
-                      styles.expandedLabel,
-                      { color: isDarkMode ? '#94A3B8' : '#64748B' }
-                    ]}>
-                      分类:
-                    </Text>
-                    <Text style={[
-                      styles.expandedValue,
-                      { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
-                    ]}>
-                      {transaction.category}
-                    </Text>
-                  </View>
-                  {transaction.note && (
-                    <View style={styles.expandedDetails}>
-                      <Text style={[
-                        styles.expandedLabel,
-                        { color: isDarkMode ? '#94A3B8' : '#64748B' }
-                      ]}>
-                        备注:
-                      </Text>
-                      <Text style={[
-                        styles.expandedValue,
-                        { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
-                      ]}>
-                        {transaction.note}
-                      </Text>
-                    </View>
-                  )}
-                  <View style={styles.expandedActions}>
-                    <TouchableOpacity style={styles.actionButton}>
-                      <Text style={[
-                        styles.actionButtonText,
-                        { color: COLORS.primary }
-                      ]}>
-                        编辑
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.actionButton}>
-                      <Text style={{ color: '#FF6B6B' }}>
-                        删除
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
+              <View style={styles.transactionRight}>
+                <Text style={[
+                  styles.transactionAmount,
+                  { color: transaction.amount < 0 ? '#FF6B6B' : '#4CAF50' }
+                ]}>
+                  {transaction.amount < 0 ? '-' : '+'}{formatCurrency(Math.abs(transaction.amount))}
+                </Text>
+              </View>
             </TouchableOpacity>
           ))
         ) : (
@@ -171,7 +103,125 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ month, year }) 
             </Text>
           </View>
         )}
-      </ScrollView>
+      </View>
+
+      {/* 交易详情模态框 */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[
+            styles.modalContent,
+            { backgroundColor: isDarkMode ? COLORS.surface.dark : COLORS.surface.light }
+          ]}>
+            {selectedTransaction && (
+              <>
+                <View style={styles.modalHeader}>
+                  <Text style={[
+                    styles.modalTitle,
+                    { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
+                  ]}>
+                    交易详情
+                  </Text>
+                  <TouchableOpacity onPress={closeModal}>
+                    <Text style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: 18 }}>×</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.transactionDetail}>
+                  <View style={[
+                    styles.detailCategoryIcon,
+                    { backgroundColor: selectedTransaction.categoryColor }
+                  ]}>
+                    <Text style={styles.detailCategoryIconText}>{selectedTransaction.categoryIcon}</Text>
+                  </View>
+
+                  <View style={styles.detailContent}>
+                    <Text style={[
+                      styles.detailTitle,
+                      { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
+                    ]}>
+                      {selectedTransaction.title}
+                    </Text>
+
+                    <Text style={[
+                      styles.detailAmount,
+                      { color: selectedTransaction.amount < 0 ? '#FF6B6B' : '#4CAF50' }
+                    ]}>
+                      {selectedTransaction.amount < 0 ? '-' : '+'}{formatCurrency(Math.abs(selectedTransaction.amount))}
+                    </Text>
+
+                    <View style={styles.detailRow}>
+                      <Text style={[
+                        styles.detailLabel,
+                        { color: isDarkMode ? '#94A3B8' : '#64748B' }
+                      ]}>
+                        分类:
+                      </Text>
+                      <Text style={[
+                        styles.detailValue,
+                        { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
+                      ]}>
+                        {selectedTransaction.category}
+                      </Text>
+                    </View>
+
+                    <View style={styles.detailRow}>
+                      <Text style={[
+                        styles.detailLabel,
+                        { color: isDarkMode ? '#94A3B8' : '#64748B' }
+                      ]}>
+                        日期:
+                      </Text>
+                      <Text style={[
+                        styles.detailValue,
+                        { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
+                      ]}>
+                        {formatDate(selectedTransaction.date)}
+                      </Text>
+                    </View>
+
+                    {selectedTransaction.note && (
+                      <View style={styles.detailRow}>
+                        <Text style={[
+                          styles.detailLabel,
+                          { color: isDarkMode ? '#94A3B8' : '#64748B' }
+                        ]}>
+                          备注:
+                        </Text>
+                        <Text style={[
+                          styles.detailValue,
+                          { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
+                        ]}>
+                          {selectedTransaction.note}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+
+                <View style={styles.modalActions}>
+                  <TouchableOpacity
+                    style={[styles.actionButton, { backgroundColor: 'rgba(108, 142, 182, 0.1)' }]}
+                    onPress={closeModal}
+                  >
+                    <Text style={{ color: COLORS.primary }}>编辑</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.actionButton, { backgroundColor: 'rgba(255, 107, 107, 0.1)' }]}
+                    onPress={closeModal}
+                  >
+                    <Text style={{ color: '#FF6B6B' }}>删除</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </Card>
   );
 };
@@ -187,7 +237,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
   },
   viewAll: {
@@ -197,31 +247,28 @@ const styles = StyleSheet.create({
     maxHeight: 400,
   },
   transactionItem: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  transactionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(51, 65, 85, 0.1)',
   },
   transactionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   categoryIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   categoryIconText: {
-    fontSize: 18,
+    fontSize: 16,
+    color: '#FFFFFF',
   },
   transactionInfo: {
     justifyContent: 'center',
@@ -240,44 +287,6 @@ const styles = StyleSheet.create({
   transactionAmount: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 2,
-  },
-  expandIcon: {
-    fontSize: 12,
-    color: '#94A3B8',
-  },
-  expandedContent: {
-    padding: 12,
-    paddingTop: 0,
-  },
-  expandedDivider: {
-    height: 1,
-    marginBottom: 12,
-  },
-  expandedDetails: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  expandedLabel: {
-    fontSize: 14,
-    width: 50,
-  },
-  expandedValue: {
-    fontSize: 14,
-    flex: 1,
-  },
-  expandedActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 8,
-  },
-  actionButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginLeft: 8,
-  },
-  actionButtonText: {
-    fontSize: 14,
   },
   emptyContainer: {
     padding: 24,
@@ -286,6 +295,90 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
+  },
+  // 模态框样式
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    width: '100%',
+    borderRadius: 12,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  transactionDetail: {
+    marginBottom: 20,
+  },
+  detailCategoryIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    alignSelf: 'center',
+  },
+  detailCategoryIconText: {
+    fontSize: 24,
+    color: '#FFFFFF',
+  },
+  detailContent: {
+    alignItems: 'center',
+  },
+  detailTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  detailAmount: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  detailRow: {
+    flexDirection: 'row',
+    width: '100%',
+    marginBottom: 12,
+  },
+  detailLabel: {
+    width: 60,
+    fontSize: 14,
+  },
+  detailValue: {
+    flex: 1,
+    fontSize: 14,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
+  actionButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    minWidth: 100,
+    alignItems: 'center',
   },
 });
 

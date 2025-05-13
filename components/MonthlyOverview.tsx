@@ -6,6 +6,7 @@ import { COLORS } from '../constants';
 import { mockMonthlyData } from '../models/mockData';
 import { formatCurrency } from '../utils';
 import Progress from './ui/Progress';
+import ArrowIcon from './ui/ArrowIcon';
 
 interface MonthlyOverviewProps {
   month: number;
@@ -44,92 +45,53 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ month, year }) => {
 
       <View style={styles.grid}>
         {/* 收入 */}
-        <View style={[
-          styles.gridItem,
-          { backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : 'rgba(248, 250, 252, 0.6)' }
-        ]}>
-          <View style={styles.gridItemHeader}>
-            <View>
+        <View style={styles.gridItem}>
+          <View style={styles.gridItemContent}>
+            <View style={styles.gridItemLeft}>
               <Text style={[
                 styles.gridItemLabel,
                 { color: isDarkMode ? '#94A3B8' : '#64748B' }
               ]}>
                 收入
               </Text>
-              <Text style={styles.incomeValue}>{formatCurrency(data.income)}</Text>
+              <Text style={[styles.incomeValue, { color: '#4CAF50' }]}>
+                {formatCurrency(data.income)}
+              </Text>
             </View>
-            <View style={[
-              styles.iconContainer,
-              { backgroundColor: 'rgba(76, 175, 80, 0.1)' }
-            ]}>
-              <Text style={styles.icon}>↑</Text>
+            <View style={styles.iconContainer}>
+              <View style={[styles.iconCircle, { backgroundColor: '#4CAF50' }]}>
+                <ArrowIcon direction="up" color="#FFFFFF" size={16} />
+              </View>
             </View>
           </View>
-          {prevMonthData && (
-            <View style={styles.changeContainer}>
-              <Text style={[
-                styles.changeText,
-                { color: incomeChange >= 0 ? '#4CAF50' : '#FF6B6B' }
-              ]}>
-                {incomeChange >= 0 ? '↑' : '↓'} {Math.abs(incomeChange).toFixed(1)}%
-              </Text>
-              <Text style={[
-                styles.comparedText,
-                { color: isDarkMode ? '#94A3B8' : '#64748B' }
-              ]}>
-                相比上月
-              </Text>
-            </View>
-          )}
         </View>
 
         {/* 支出 */}
-        <View style={[
-          styles.gridItem,
-          { backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : 'rgba(248, 250, 252, 0.6)' }
-        ]}>
-          <View style={styles.gridItemHeader}>
-            <View>
+        <View style={styles.gridItem}>
+          <View style={styles.gridItemContent}>
+            <View style={styles.gridItemLeft}>
               <Text style={[
                 styles.gridItemLabel,
                 { color: isDarkMode ? '#94A3B8' : '#64748B' }
               ]}>
                 支出
               </Text>
-              <Text style={styles.expenseValue}>{formatCurrency(data.expenses)}</Text>
+              <Text style={[styles.expenseValue, { color: '#FF6B6B' }]}>
+                {formatCurrency(data.expenses)}
+              </Text>
             </View>
-            <View style={[
-              styles.iconContainer,
-              { backgroundColor: 'rgba(255, 107, 107, 0.1)' }
-            ]}>
-              <Text style={styles.icon}>↓</Text>
+            <View style={styles.iconContainer}>
+              <View style={[styles.iconCircle, { backgroundColor: '#FF6B6B' }]}>
+                <ArrowIcon direction="down" color="#FFFFFF" size={16} />
+              </View>
             </View>
           </View>
-          {prevMonthData && (
-            <View style={styles.changeContainer}>
-              <Text style={[
-                styles.changeText,
-                { color: expensesChange <= 0 ? '#4CAF50' : '#FF6B6B' }
-              ]}>
-                {expensesChange >= 0 ? '↑' : '↓'} {Math.abs(expensesChange).toFixed(1)}%
-              </Text>
-              <Text style={[
-                styles.comparedText,
-                { color: isDarkMode ? '#94A3B8' : '#64748B' }
-              ]}>
-                相比上月
-              </Text>
-            </View>
-          )}
         </View>
 
         {/* 结余 */}
-        <View style={[
-          styles.gridItem,
-          { backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : 'rgba(248, 250, 252, 0.6)' }
-        ]}>
-          <View style={styles.gridItemHeader}>
-            <View>
+        <View style={[styles.gridItem, styles.lastGridItem]}>
+          <View style={styles.gridItemContent}>
+            <View style={styles.gridItemLeft}>
               <Text style={[
                 styles.gridItemLabel,
                 { color: isDarkMode ? '#94A3B8' : '#64748B' }
@@ -143,23 +105,23 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ month, year }) => {
                 {formatCurrency(balance)}
               </Text>
             </View>
-            <View style={[
-              styles.iconContainer,
-              { backgroundColor: isPositive ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 107, 107, 0.1)' }
-            ]}>
-              <Text style={styles.icon}>{isPositive ? '↑' : '↓'}</Text>
+            <View style={styles.iconContainer}>
+              <View style={[styles.iconCircle, { backgroundColor: '#4CAF50' }]}>
+                <ArrowIcon direction="up" color="#FFFFFF" size={16} />
+              </View>
             </View>
           </View>
           <View style={styles.progressContainer}>
-            <Progress 
-              value={data.income} 
-              max={data.income + data.expenses} 
-              indicatorColor="rgba(108, 142, 182, 0.8)"
+            <Progress
+              value={data.income}
+              max={data.income + data.expenses}
+              indicatorColor="#6C8EB6"
+              trackColor={isDarkMode ? '#1E293B' : '#E2E8F0'}
               style={styles.progress}
             />
             <View style={styles.progressLabels}>
-              <Text style={{ color: '#4CAF50', fontSize: 12 }}>收入</Text>
-              <Text style={{ color: '#FF6B6B', fontSize: 12 }}>支出</Text>
+              <Text style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: 12 }}>收入</Text>
+              <Text style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: 12 }}>支出</Text>
             </View>
           </View>
         </View>
@@ -173,72 +135,85 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     marginBottom: 16,
   },
   grid: {
     flexDirection: 'column',
-    gap: 12,
+    gap: 16,
   },
   gridItem: {
-    padding: 16,
+    paddingVertical: 16,
     borderRadius: 12,
+    backgroundColor: '#131C2E',
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    shadowColor: '#6C8EB6',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
     borderWidth: 1,
-    borderColor: 'rgba(51, 65, 85, 0.1)',
+    borderColor: 'rgba(108, 142, 182, 0.1)',
   },
-  gridItemHeader: {
+  lastGridItem: {
+    marginBottom: 0,
+  },
+  gridItemContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  gridItemLeft: {
+    flexDirection: 'column',
   },
   gridItemLabel: {
     fontSize: 14,
     marginBottom: 4,
   },
-  incomeValue: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#4CAF50',
-  },
-  expenseValue: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FF6B6B',
-  },
-  balanceValue: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
   iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconCircle: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  icon: {
+  iconText: {
     fontSize: 18,
-    color: '#6C8EB6',
+    color: '#FFFFFF',
+  },
+  incomeValue: {
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  expenseValue: {
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  balanceValue: {
+    fontSize: 24,
+    fontWeight: '700',
   },
   changeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 4,
   },
   changeText: {
     fontSize: 12,
     fontWeight: '500',
-    marginRight: 4,
-  },
-  comparedText: {
-    fontSize: 12,
   },
   progressContainer: {
-    marginTop: 8,
+    marginTop: 16,
   },
   progress: {
     marginBottom: 4,
+    height: 6,
+    borderRadius: 3,
   },
   progressLabels: {
     flexDirection: 'row',

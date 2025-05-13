@@ -16,11 +16,11 @@ export const mockMonthlyData = [
 
 // 分类数据（饼图）
 export const mockCategoryData = [
-  { name: "餐饮", amount: 2500, color: "#FF6B6B" },
-  { name: "交通", amount: 1200, color: "#4ECDC4" },
-  { name: "购物", amount: 1800, color: "#FFD166" },
-  { name: "住房", amount: 2500, color: "#6C8EB6" },
-  { name: "娱乐", amount: 700, color: "#C06C84" },
+  { name: "餐饮", amount: 2500, color: "#FF6B6B", icon: "🍔" },
+  { name: "交通", amount: 1200, color: "#4ECDC4", icon: "🚗" },
+  { name: "购物", amount: 1800, color: "#FFD166", icon: "🛍️" },
+  { name: "住房", amount: 2500, color: "#6C8EB6", icon: "🏠" },
+  { name: "娱乐", amount: 700, color: "#C06C84", icon: "🎮" },
 ];
 
 // 趋势数据（柱状图）

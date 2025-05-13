@@ -9,6 +9,7 @@ interface ProgressProps {
   indicatorStyle?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   indicatorColor?: string;
+  trackColor?: string;
 }
 
 const Progress: React.FC<ProgressProps> = ({
@@ -18,20 +19,22 @@ const Progress: React.FC<ProgressProps> = ({
   indicatorStyle,
   backgroundColor,
   indicatorColor,
+  trackColor,
 }) => {
   const { isDarkMode } = useTheme();
   const percentage = Math.min(Math.max(0, value), max) / max * 100;
 
   return (
-    <View 
+    <View
       style={[
-        styles.container, 
+        styles.container,
         isDarkMode ? styles.containerDark : styles.containerLight,
+        trackColor ? { backgroundColor: trackColor } : undefined,
         backgroundColor ? { backgroundColor } : undefined,
         style
       ]}
     >
-      <View 
+      <View
         style={[
           styles.indicator,
           { width: `${percentage}%` },

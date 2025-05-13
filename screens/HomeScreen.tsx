@@ -33,55 +33,41 @@ const HomeScreen: React.FC = () => {
   return (
     <View style={[
       styles.container,
-      { backgroundColor: isDarkMode ? COLORS.background.dark : COLORS.background.light }
+      { backgroundColor: isDarkMode ? '#0A101F' : COLORS.background.light }
     ]}>
-      {/* 装饰元素 */}
-      <View style={styles.decorativeContainer}>
-        <View style={[
-          styles.decorativeTop,
-          { backgroundColor: isDarkMode ? 'rgba(108, 142, 182, 0.1)' : 'rgba(108, 142, 182, 0.05)' }
-        ]} />
-        <View style={[
-          styles.decorativeBottom,
-          { backgroundColor: isDarkMode ? 'rgba(255, 107, 107, 0.1)' : 'rgba(255, 107, 107, 0.05)' }
-        ]} />
+      {/* 背景装饰 */}
+      <View style={styles.backgroundDecoration}>
+        <View style={styles.backgroundCircle1} />
+        <View style={styles.backgroundCircle2} />
       </View>
-
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
-        {/* 头部 */}
-        <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Text style={[
-              styles.title,
-              { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
-            ]}>
-              智能记账
-            </Text>
-          </View>
-          <View style={styles.monthSelector}>
+        {/* 头部导航栏 */}
+        <View style={styles.navBar}>
+          <TouchableOpacity style={styles.menuButton}>
+            <Text style={styles.menuIcon}>≡</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.navTitle}>
+            智能记账
+          </Text>
+
+          <View style={styles.monthNavigator}>
             <TouchableOpacity
               onPress={handlePreviousMonth}
-              style={[
-                styles.monthButton,
-                { backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)' }
-              ]}
+              style={styles.navArrowButton}
             >
-              <Text style={{ color: COLORS.primary }}>{'<'}</Text>
+              <Text style={styles.navArrowText}>{'<'}</Text>
             </TouchableOpacity>
-            <Text style={[
-              styles.monthText,
-              { color: isDarkMode ? COLORS.text.dark : COLORS.text.light }
-            ]}>
+
+            <Text style={styles.navMonthText}>
               {months[currentMonth]} {currentYear}
             </Text>
+
             <TouchableOpacity
               onPress={handleNextMonth}
-              style={[
-                styles.monthButton,
-                { backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)' }
-              ]}
+              style={styles.navArrowButton}
             >
-              <Text style={{ color: COLORS.primary }}>{'>'}</Text>
+              <Text style={styles.navArrowText}>{'>'}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -105,6 +91,16 @@ const HomeScreen: React.FC = () => {
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
+
+      {/* 聊天按钮 */}
+      <TouchableOpacity
+        style={[
+          styles.chatButton,
+          { backgroundColor: '#4ECDC4' }
+        ]}
+      >
+        <Text style={styles.chatButtonIcon}>💬</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -112,92 +108,145 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
   },
-  decorativeContainer: {
+  backgroundDecoration: {
     position: 'absolute',
     width: '100%',
     height: '100%',
     overflow: 'hidden',
   },
-  decorativeTop: {
+  backgroundCircle1: {
     position: 'absolute',
-    top: -100,
-    left: 0,
-    width: '100%',
-    height: 200,
-    borderRadius: 100,
-    transform: [{ scaleX: 2 }],
+    top: -150,
+    right: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(108, 142, 182, 0.1)',
+    transform: [{ scale: 1.5 }],
   },
-  decorativeBottom: {
+  backgroundCircle2: {
     position: 'absolute',
-    bottom: -100,
-    right: 0,
-    width: '100%',
-    height: 200,
-    borderRadius: 100,
-    transform: [{ scaleX: 2 }],
+    bottom: -150,
+    left: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    transform: [{ scale: 1.5 }],
   },
   scrollView: {
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
+    padding: 0,
+    paddingTop: 16,
   },
-  header: {
+  navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     marginBottom: 16,
+    backgroundColor: '#0A101F',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(108, 142, 182, 0.1)',
+    shadowColor: '#6C8EB6',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  monthSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  monthButton: {
+  menuButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: '#6C8EB6',
+    fontWeight: 'bold',
+  },
+  navTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#6C8EB6',
+  },
+  monthNavigator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#131C2E',
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderWidth: 1,
     borderColor: 'rgba(108, 142, 182, 0.2)',
+    shadowColor: '#6C8EB6',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 2,
   },
-  monthText: {
-    marginHorizontal: 8,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  card: {
-    marginBottom: 16,
-    minHeight: 100,
+  navArrowButton: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  navArrowText: {
+    fontSize: 16,
+    color: '#6C8EB6',
+    fontWeight: 'bold',
+  },
+  navMonthText: {
+    marginHorizontal: 8,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#FFFFFF',
   },
   addButton: {
     position: 'absolute',
     right: 20,
     bottom: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: 'rgba(108, 142, 182, 0.3)',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    elevation: 5,
+    backgroundColor: '#6C8EB6',
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 8,
   },
   addButtonText: {
     fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  chatButton: {
+    position: 'absolute',
+    right: 20,
+    bottom: 80,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#4ECDC4',
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  chatButtonIcon: {
+    fontSize: 20,
     color: 'white',
   },
 });

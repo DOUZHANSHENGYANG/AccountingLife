@@ -47,8 +47,8 @@ const darkTheme = {
     ...MD3DarkTheme.colors,
     primary: '#6C8EB6',
     secondary: '#4ECDC4',
-    background: '#0F172A',
-    surface: '#1E293B',
+    background: '#0E1525', // 更深的蓝黑色，接近原型
+    surface: '#131C2E', // 更深的蓝黑色，接近原型中的卡片颜色
     error: '#FF6B6B',
     text: '#FFFFFF',
     disabled: '#94A3B8',
@@ -67,17 +67,15 @@ export function ThemeProvider({ children, defaultTheme = 'dark' }: ThemeProvider
     const checkTheme = async () => {
       try {
         // 这里可以使用AsyncStorage来保存和获取主题设置
-        // 暂时使用系统偏好
-        if (colorScheme) {
-          setTheme(colorScheme);
-        }
+        // 暂时使用系统偏好，但默认使用暗色主题
+        setTheme('dark'); // 强制使用暗色主题
       } catch (error) {
         console.log('Error loading theme preference', error);
       }
     };
 
     checkTheme();
-  }, [colorScheme]);
+  }, []);
 
   const isDarkMode = theme === 'dark';
   const paperTheme = isDarkMode ? darkTheme : lightTheme;

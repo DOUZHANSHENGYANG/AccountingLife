@@ -13,13 +13,13 @@ const Card: React.FC<CardProps> = ({ children, style, onPress }) => {
 
   const cardStyle = [
     styles.card,
-    isDarkMode ? styles.cardDark : styles.cardLight,
+    { backgroundColor: isDarkMode ? '#0A101F' : '#FFFFFF' },
     style,
   ];
 
   if (onPress) {
     return (
-      <Pressable 
+      <Pressable
         style={({ pressed }) => [
           cardStyle,
           pressed && styles.pressed,
@@ -36,28 +36,18 @@ const Card: React.FC<CardProps> = ({ children, style, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 16,
     overflow: 'hidden',
-  },
-  cardLight: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
-    borderColor: '#E2E8F0',
+    marginHorizontal: 16,
+    marginVertical: 8,
+    backgroundColor: '#0A101F',
     borderWidth: 1,
-    shadowColor: 'rgba(108, 142, 182, 0.1)',
+    borderColor: 'rgba(108, 142, 182, 0.1)',
+    shadowColor: '#6C8EB6',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 5,
-  },
-  cardDark: {
-    backgroundColor: 'rgba(30, 41, 59, 0.6)',
-    borderColor: '#334155',
-    borderWidth: 1,
-    shadowColor: 'rgba(108, 142, 182, 0.2)',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
     elevation: 5,
   },
   pressed: {

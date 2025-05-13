@@ -18,17 +18,18 @@ export const COLORS = {
   secondary: '#4ECDC4',
   background: {
     light: '#F8FAFC',
-    dark: '#0F172A',
+    dark: '#0E1525', // 更深的蓝黑色，接近原型
   },
   surface: {
     light: '#FFFFFF',
-    dark: '#1E293B',
+    dark: '#131C2E', // 更深的蓝黑色，接近原型中的卡片颜色
   },
   text: {
     light: '#0F172A',
     dark: '#FFFFFF',
   },
   error: '#FF6B6B',
+  success: '#4CAF50',
   disabled: {
     light: '#94A3B8',
     dark: '#94A3B8',
@@ -39,6 +40,6 @@ export const COLORS = {
   },
   border: {
     light: '#E2E8F0',
-    dark: '#334155',
+    dark: '#1E293B',
   },
 };
