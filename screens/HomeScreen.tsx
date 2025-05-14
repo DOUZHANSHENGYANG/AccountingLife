@@ -6,11 +6,29 @@ import { COLORS } from '../constants';
 import MonthlyOverview from '../components/MonthlyOverview';
 import StatisticsChart from '../components/StatisticsChart';
 import RecentTransactions from '../components/RecentTransactions';
+import AddTransactionModal from '../components/AddTransactionModal';
+import SideMenu from '../components/SideMenu';
+import AiAssistant from '../components/AiAssistant';
+import ProfileModal from '../components/ProfileModal';
+import BudgetManagementModal from '../components/BudgetManagementModal';
+import CategoryManagementModal from '../components/CategoryManagementModal';
+import FamilySharingModal from '../components/FamilySharingModal';
+import ExportDataModal from '../components/ExportDataModal';
 
 const HomeScreen: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
+
+  // 高级功能模态框状态
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isBudgetManagementOpen, setIsBudgetManagementOpen] = useState(false);
+  const [isCategoryManagementOpen, setIsCategoryManagementOpen] = useState(false);
+  const [isFamilySharingOpen, setIsFamilySharingOpen] = useState(false);
+  const [isExportDataOpen, setIsExportDataOpen] = useState(false);
 
   const handlePreviousMonth = () => {
     if (currentMonth === 0) {
@@ -43,11 +61,14 @@ const HomeScreen: React.FC = () => {
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
         {/* 头部导航栏 */}
         <View style={styles.navBar}>
-          <TouchableOpacity style={styles.menuButton}>
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => setIsSideMenuOpen(true)}
+          >
             <Text style={styles.menuIcon}>≡</Text>
           </TouchableOpacity>
 
-          <Text style={styles.navTitle}>
+          <Text style={styles.navTitleGlow}>
             智能记账
           </Text>
 
@@ -82,25 +103,85 @@ const HomeScreen: React.FC = () => {
         <RecentTransactions month={currentMonth} year={currentYear} />
       </ScrollView>
 
-      {/* 添加交易按钮 */}
+      {/* AI助手按钮 */}
       <TouchableOpacity
-        style={[
-          styles.addButton,
-          { backgroundColor: COLORS.primary }
-        ]}
+        style={styles.floatingButton}
+        onPress={() => setIsAiAssistantOpen(true)}
       >
-        <Text style={styles.addButtonText}>+</Text>
+        <View style={[styles.buttonInner, styles.aiButtonInner]}>
+          <Text style={styles.buttonIcon}>🤖</Text>
+        </View>
       </TouchableOpacity>
 
-      {/* 聊天按钮 */}
+      {/* 添加交易按钮 */}
       <TouchableOpacity
-        style={[
-          styles.chatButton,
-          { backgroundColor: '#4ECDC4' }
-        ]}
+        style={[styles.floatingButton, styles.addButtonPosition]}
+        onPress={() => setIsAddModalOpen(true)}
       >
-        <Text style={styles.chatButtonIcon}>💬</Text>
+        <View style={[styles.buttonInner, styles.addButtonInner]}>
+          <Text style={styles.buttonIcon}>+</Text>
+        </View>
       </TouchableOpacity>
+
+      {/* 侧边菜单 */}
+      <SideMenu
+        isOpen={isSideMenuOpen}
+        onClose={() => setIsSideMenuOpen(false)}
+        // 传递高级功能模态框的状态和设置函数
+        isProfileOpen={isProfileOpen}
+        setIsProfileOpen={setIsProfileOpen}
+        isBudgetManagementOpen={isBudgetManagementOpen}
+        setIsBudgetManagementOpen={setIsBudgetManagementOpen}
+        isCategoryManagementOpen={isCategoryManagementOpen}
+        setIsCategoryManagementOpen={setIsCategoryManagementOpen}
+        isFamilySharingOpen={isFamilySharingOpen}
+        setIsFamilySharingOpen={setIsFamilySharingOpen}
+        isExportDataOpen={isExportDataOpen}
+        setIsExportDataOpen={setIsExportDataOpen}
+      />
+
+      {/* 添加交易模态框 */}
+      <AddTransactionModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+
+      {/* AI助手模态框 */}
+      <AiAssistant isOpen={isAiAssistantOpen} onClose={() => setIsAiAssistantOpen(false)} />
+
+      {/* 高级功能模态框 */}
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => {
+          setIsProfileOpen(false);
+          setIsSideMenuOpen(false);
+        }}
+      />
+      <BudgetManagementModal
+        isOpen={isBudgetManagementOpen}
+        onClose={() => {
+          setIsBudgetManagementOpen(false);
+          setIsSideMenuOpen(false);
+        }}
+      />
+      <CategoryManagementModal
+        isOpen={isCategoryManagementOpen}
+        onClose={() => {
+          setIsCategoryManagementOpen(false);
+          setIsSideMenuOpen(false);
+        }}
+      />
+      <FamilySharingModal
+        isOpen={isFamilySharingOpen}
+        onClose={() => {
+          setIsFamilySharingOpen(false);
+          setIsSideMenuOpen(false);
+        }}
+      />
+      <ExportDataModal
+        isOpen={isExportDataOpen}
+        onClose={() => {
+          setIsExportDataOpen(false);
+          setIsSideMenuOpen(false);
+        }}
+      />
     </View>
   );
 };
@@ -170,10 +251,13 @@ const styles = StyleSheet.create({
     color: '#6C8EB6',
     fontWeight: 'bold',
   },
-  navTitle: {
-    fontSize: 18,
+  navTitleGlow: {
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#6C8EB6',
+    color: '#4A6FE5',
+    textShadowColor: '#4ECDC4',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
   },
   monthNavigator: {
     flexDirection: 'row',
@@ -208,46 +292,48 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#FFFFFF',
   },
-  addButton: {
+  floatingButton: {
     position: 'absolute',
     right: 20,
-    bottom: 20,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    bottom: 90,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#6C8EB6',
+    backgroundColor: 'transparent',
     shadowColor: 'rgba(0, 0, 0, 0.3)',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
     shadowRadius: 8,
     elevation: 8,
   },
-  addButtonText: {
+  addButtonPosition: {
+    bottom: 20,
+  },
+  buttonInner: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  addButtonInner: {
+    backgroundColor: '#4A6FE5',
+    shadowColor: '#4A6FE5',
+  },
+  aiButtonInner: {
+    backgroundColor: '#4ECDC4',
+    shadowColor: '#4ECDC4',
+  },
+  buttonIcon: {
     fontSize: 24,
     color: 'white',
     fontWeight: 'bold',
-  },
-  chatButton: {
-    position: 'absolute',
-    right: 20,
-    bottom: 80,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4ECDC4',
-    shadowColor: 'rgba(0, 0, 0, 0.3)',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  chatButtonIcon: {
-    fontSize: 20,
-    color: 'white',
   },
 });
 

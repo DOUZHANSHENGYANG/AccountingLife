@@ -60,7 +60,7 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ month, year }) => {
             </View>
             <View style={styles.iconContainer}>
               <View style={[styles.iconCircle, { backgroundColor: '#4CAF50' }]}>
-                <ArrowIcon direction="up" color="#FFFFFF" size={16} />
+                <ArrowIcon direction="right" color="#FFFFFF" size={16} />
               </View>
             </View>
           </View>
@@ -82,7 +82,7 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ month, year }) => {
             </View>
             <View style={styles.iconContainer}>
               <View style={[styles.iconCircle, { backgroundColor: '#FF6B6B' }]}>
-                <ArrowIcon direction="down" color="#FFFFFF" size={16} />
+                <ArrowIcon direction="left" color="#FFFFFF" size={16} />
               </View>
             </View>
           </View>
@@ -107,7 +107,7 @@ const MonthlyOverview: React.FC<MonthlyOverviewProps> = ({ month, year }) => {
             </View>
             <View style={styles.iconContainer}>
               <View style={[styles.iconCircle, { backgroundColor: '#4CAF50' }]}>
-                <ArrowIcon direction="up" color="#FFFFFF" size={16} />
+                <ArrowIcon direction="right" color="#FFFFFF" size={16} />
               </View>
             </View>
           </View>
