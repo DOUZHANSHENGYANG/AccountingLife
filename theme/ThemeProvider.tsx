@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Theme = 'light' | 'dark';
 
@@ -66,16 +67,36 @@ export function ThemeProvider({ children, defaultTheme = 'dark' }: ThemeProvider
     // 检查保存的主题偏好或使用系统偏好
     const checkTheme = async () => {
       try {
-        // 这里可以使用AsyncStorage来保存和获取主题设置
-        // 暂时使用系统偏好，但默认使用暗色主题
-        setTheme('dark'); // 强制使用暗色主题
+        // 从AsyncStorage获取保存的主题设置
+        const savedTheme = await AsyncStorage.getItem('theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          setTheme(savedTheme);
+        } else {
+          // 默认使用暗色主题
+          setTheme('dark');
+        }
       } catch (error) {
         console.log('Error loading theme preference', error);
+        // 出错时使用暗色主题
+        setTheme('dark');
       }
     };
 
     checkTheme();
   }, []);
+
+  // 当主题变化时，保存到AsyncStorage
+  useEffect(() => {
+    const saveTheme = async () => {
+      try {
+        await AsyncStorage.setItem('theme', theme);
+      } catch (error) {
+        console.log('Error saving theme preference', error);
+      }
+    };
+
+    saveTheme();
+  }, [theme]);
 
   const isDarkMode = theme === 'dark';
   const paperTheme = isDarkMode ? darkTheme : lightTheme;
