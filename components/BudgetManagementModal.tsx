@@ -172,13 +172,26 @@ const BudgetManagementModal: React.FC<BudgetManagementModalProps> = ({ isOpen, o
       transparent={true}
       visible={isOpen}
       onRequestClose={onClose}
+      statusBarTranslucent={true} // 确保模态框覆盖状态栏
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalOverlay}>
-          <View style={[
-            styles.modalContent,
-            { backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)' }
-          ]}>
+      <TouchableOpacity
+        style={styles.modalContainer}
+        activeOpacity={1} // 禁止透明度变化
+        onPress={onClose} // 点击背景关闭模态框
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1} // 禁止透明度变化
+          onPress={onClose} // 点击背景关闭模态框
+        >
+          <TouchableOpacity
+            style={[
+              styles.modalContent,
+              { backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)' }
+            ]}
+            activeOpacity={1} // 禁止透明度变化
+            onPress={(e) => e.stopPropagation()} // 阻止点击事件冒泡，防止点击内容区域关闭模态框
+          >
             <View style={[
               styles.modalHeader,
               { borderBottomColor: isDarkMode ? '#334155' : '#E2E8F0' }
@@ -500,9 +513,9 @@ const BudgetManagementModal: React.FC<BudgetManagementModalProps> = ({ isOpen, o
                 </View>
               )}
             </ScrollView>
-          </View>
-        </View>
-      </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </TouchableOpacity>
     </Modal>
   );
 };
@@ -512,27 +525,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 100, // 增加z-index，使其在侧边栏上面
+    zIndex: 9999, // 极高的z-index，确保在所有元素之上
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // 更暗的背景，增强视觉分离
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    zIndex: 100, // 增加z-index，使其在侧边栏上面
+    height: '100%',
+    zIndex: 9999, // 极高的z-index
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   modalContent: {
     width: '90%',
-    maxHeight: '80%',
+    maxHeight: '90%', // 增加最大高度
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
     shadowColor: '#6C8EB6',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.5, // 增强阴影
     shadowRadius: 30,
-    elevation: 10,
+    elevation: 20, // 增加elevation
+    zIndex: 10000, // 确保内容在遮罩之上
   },
   modalHeader: {
     flexDirection: 'row',

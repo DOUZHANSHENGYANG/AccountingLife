@@ -101,17 +101,22 @@ const SideMenu: React.FC<SideMenuProps> = ({
   const handleItemClick = (id: string) => {
     setActiveItem(id);
 
-    // 直接打开相应的模态框，不关闭侧边栏
+    // 打开相应的模态框，并关闭侧边栏
     if (id === 'family') {
       setIsFamilySharingOpen(true);
+      onClose(); // 关闭侧边栏
     } else if (id === 'export') {
       setIsExportDataOpen(true);
+      onClose(); // 关闭侧边栏
     } else if (id === 'profile') {
       setIsProfileOpen(true);
+      onClose(); // 关闭侧边栏
     } else if (id === 'categories') {
       setIsCategoryManagementOpen(true);
+      onClose(); // 关闭侧边栏
     } else if (id === 'budget') {
       setIsBudgetManagementOpen(true);
+      onClose(); // 关闭侧边栏
     } else if (id === 'home') {
       onClose();
     }
@@ -260,7 +265,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRightWidth: 1,
     flexDirection: 'column',
-    zIndex: 1, // 降低z-index，使其在模态框下面
+    zIndex: 10, // 提高z-index，确保侧边栏在其他元素之上
     backgroundColor: '#0E1525', // 深蓝色背景，与图片一致
   },
   header: {

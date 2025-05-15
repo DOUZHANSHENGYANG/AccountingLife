@@ -14,6 +14,7 @@ import BudgetManagementModal from '../components/BudgetManagementModal';
 import CategoryManagementModal from '../components/CategoryManagementModal';
 import FamilySharingModal from '../components/FamilySharingModal';
 import ExportDataModal from '../components/ExportDataModal';
+import DatePickerModal from '../components/DatePickerModal';
 
 const HomeScreen: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -29,6 +30,7 @@ const HomeScreen: React.FC = () => {
   const [isCategoryManagementOpen, setIsCategoryManagementOpen] = useState(false);
   const [isFamilySharingOpen, setIsFamilySharingOpen] = useState(false);
   const [isExportDataOpen, setIsExportDataOpen] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const handlePreviousMonth = () => {
     if (currentMonth === 0) {
@@ -46,6 +48,11 @@ const HomeScreen: React.FC = () => {
     } else {
       setCurrentMonth(currentMonth + 1);
     }
+  };
+
+  const handleDateChange = (month: number, year: number) => {
+    setCurrentMonth(month);
+    setCurrentYear(year);
   };
 
   return (
@@ -80,9 +87,14 @@ const HomeScreen: React.FC = () => {
               <Text style={styles.navArrowText}>{'<'}</Text>
             </TouchableOpacity>
 
-            <Text style={styles.navMonthText}>
-              {months[currentMonth]} {currentYear}
-            </Text>
+            <TouchableOpacity
+              onPress={() => setIsDatePickerOpen(true)}
+              style={styles.navMonthButton}
+            >
+              <Text style={styles.navMonthText}>
+                {months[currentMonth]} {currentYear}
+              </Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleNextMonth}
@@ -181,6 +193,15 @@ const HomeScreen: React.FC = () => {
           setIsExportDataOpen(false);
           setIsSideMenuOpen(false);
         }}
+      />
+
+      {/* 日期选择器模态框 */}
+      <DatePickerModal
+        isOpen={isDatePickerOpen}
+        onClose={() => setIsDatePickerOpen(false)}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        onDateChange={handleDateChange}
       />
     </View>
   );
@@ -286,8 +307,15 @@ const styles = StyleSheet.create({
     color: '#6C8EB6',
     fontWeight: 'bold',
   },
+  navMonthButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: 'rgba(108, 142, 182, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(108, 142, 182, 0.3)',
+  },
   navMonthText: {
-    marginHorizontal: 8,
     fontSize: 14,
     fontWeight: '500',
     color: '#FFFFFF',
