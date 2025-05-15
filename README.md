@@ -1,8 +1,8 @@
-# 智能记账 (AccountingLife)
+# 智能记账 (AccountingLife)  开发中
 
 <div align="center">
   <img src="AccountingLifeApp/assets/icon.png" alt="智能记账 Logo" width="120" height="120" />
-  <h3>一款功能强大的个人记账应用 开发中</h3>
+  <h3>一款功能强大的个人记账应用</h3>
 </div>
 
 ## 📱 应用概述
