@@ -69,6 +69,9 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
               ]}>
                 添加交易
               </Text>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={{ color: isDarkMode ? '#94A3B8' : '#64748B', fontSize: 18 }}>×</Text>
+              </TouchableOpacity>
             </View>
 
             <ScrollView style={styles.modalBody}>
@@ -278,6 +281,9 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
   },

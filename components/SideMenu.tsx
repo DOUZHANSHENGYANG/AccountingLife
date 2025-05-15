@@ -17,6 +17,7 @@ import BudgetManagementModal from './BudgetManagementModal';
 import CategoryManagementModal from './CategoryManagementModal';
 import FamilySharingModal from './FamilySharingModal';
 import ExportDataModal from './ExportDataModal';
+import ImportDataModal from './ImportDataModal';
 
 
 
@@ -34,6 +35,8 @@ interface SideMenuProps {
   setIsFamilySharingOpen: (isOpen: boolean) => void;
   isExportDataOpen: boolean;
   setIsExportDataOpen: (isOpen: boolean) => void;
+  isImportDataOpen: boolean;
+  setIsImportDataOpen: (isOpen: boolean) => void;
 }
 
 const SideMenu: React.FC<SideMenuProps> = ({
@@ -48,7 +51,9 @@ const SideMenu: React.FC<SideMenuProps> = ({
   isFamilySharingOpen,
   setIsFamilySharingOpen,
   isExportDataOpen,
-  setIsExportDataOpen
+  setIsExportDataOpen,
+  isImportDataOpen,
+  setIsImportDataOpen
 }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [activeItem, setActiveItem] = useState('home');
@@ -95,6 +100,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
     { id: 'budget', label: '预算管理', icon: 'chart-pie' },
     { id: 'family', label: '家庭共享', icon: 'account-group' },
     { id: 'categories', label: '分类管理', icon: 'cog' },
+    { id: 'import', label: '导入数据', icon: 'file-import' },
     { id: 'export', label: '导出数据', icon: 'file-export' },
   ];
 
@@ -107,6 +113,9 @@ const SideMenu: React.FC<SideMenuProps> = ({
       onClose(); // 关闭侧边栏
     } else if (id === 'export') {
       setIsExportDataOpen(true);
+      onClose(); // 关闭侧边栏
+    } else if (id === 'import') {
+      setIsImportDataOpen(true);
       onClose(); // 关闭侧边栏
     } else if (id === 'profile') {
       setIsProfileOpen(true);

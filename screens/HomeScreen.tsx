@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { useTheme } from '../theme/ThemeProvider';
 import { months } from '../constants';
 import { COLORS } from '../constants';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MonthlyOverview from '../components/MonthlyOverview';
 import StatisticsChart from '../components/StatisticsChart';
 import RecentTransactions from '../components/RecentTransactions';
@@ -14,6 +15,7 @@ import BudgetManagementModal from '../components/BudgetManagementModal';
 import CategoryManagementModal from '../components/CategoryManagementModal';
 import FamilySharingModal from '../components/FamilySharingModal';
 import ExportDataModal from '../components/ExportDataModal';
+import ImportDataModal from '../components/ImportDataModal';
 import DatePickerModal from '../components/DatePickerModal';
 
 const HomeScreen: React.FC = () => {
@@ -30,6 +32,7 @@ const HomeScreen: React.FC = () => {
   const [isCategoryManagementOpen, setIsCategoryManagementOpen] = useState(false);
   const [isFamilySharingOpen, setIsFamilySharingOpen] = useState(false);
   const [isExportDataOpen, setIsExportDataOpen] = useState(false);
+  const [isImportDataOpen, setIsImportDataOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const handlePreviousMonth = () => {
@@ -125,6 +128,16 @@ const HomeScreen: React.FC = () => {
         </View>
       </TouchableOpacity>
 
+      {/* 导入数据按钮 */}
+      <TouchableOpacity
+        style={[styles.floatingButton, styles.importButtonPosition]}
+        onPress={() => setIsImportDataOpen(true)}
+      >
+        <View style={[styles.buttonInner, styles.importButtonInner]}>
+          <Icon name="file-import" size={20} color="#FFFFFF" />
+        </View>
+      </TouchableOpacity>
+
       {/* 添加交易按钮 */}
       <TouchableOpacity
         style={[styles.floatingButton, styles.addButtonPosition]}
@@ -150,6 +163,8 @@ const HomeScreen: React.FC = () => {
         setIsFamilySharingOpen={setIsFamilySharingOpen}
         isExportDataOpen={isExportDataOpen}
         setIsExportDataOpen={setIsExportDataOpen}
+        isImportDataOpen={isImportDataOpen}
+        setIsImportDataOpen={setIsImportDataOpen}
       />
 
       {/* 添加交易模态框 */}
@@ -191,6 +206,15 @@ const HomeScreen: React.FC = () => {
         isOpen={isExportDataOpen}
         onClose={() => {
           setIsExportDataOpen(false);
+          setIsSideMenuOpen(false);
+        }}
+      />
+
+      {/* 导入数据模态框 */}
+      <ImportDataModal
+        isOpen={isImportDataOpen}
+        onClose={() => {
+          setIsImportDataOpen(false);
           setIsSideMenuOpen(false);
         }}
       />
@@ -323,7 +347,7 @@ const styles = StyleSheet.create({
   floatingButton: {
     position: 'absolute',
     right: 20,
-    bottom: 90,
+    bottom: 160, // 默认位置，AI助手按钮
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -335,6 +359,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 8,
     elevation: 8,
+  },
+  importButtonPosition: {
+    bottom: 90,
   },
   addButtonPosition: {
     bottom: 20,
@@ -357,6 +384,10 @@ const styles = StyleSheet.create({
   aiButtonInner: {
     backgroundColor: '#4ECDC4',
     shadowColor: '#4ECDC4',
+  },
+  importButtonInner: {
+    backgroundColor: '#FF9F43',
+    shadowColor: '#FF9F43',
   },
   buttonIcon: {
     fontSize: 24,
